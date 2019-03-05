@@ -32,28 +32,28 @@ public:
     {
         Vec3 euler;
 
-		if (fabsf(m[2].x) >= 1.0)
-		{
-			euler.z = 0.0;
-	
-			// From difference of angles formula
-			if (m[2].x < 0.0)  //gimbal locked down
-			{
+        if (fabsf(m[2].x) >= 1.0)
+        {
+            euler.z = 0.0;
+
+            // From difference of angles formula
+            if (m[2].x < 0.0)  //gimbal locked down
+            {
                 euler.y = PI / 2.0;
                 euler.x = atan2f(m[0].y, m[0].z);
-			}
-			else // gimbal locked up
-			{
+            }
+            else // gimbal locked up
+            {
                 euler.y = -PI / 2.0;
                 euler.x = atan2f(-m[0].y, -m[0].z);
-			}
-		}
-		else
-		{
-			euler.y = -asinf(m[2].x);
-			euler.x = atan2f(m[2].y / cosf(euler.y), m[2].z / cosf(euler.y));
-			euler.z = atan2f(m[1].x / cosf(euler.y), m[0].x / cosf(euler.y));
-		}
+            }
+        }
+        else
+        {
+            euler.y = -asinf(m[2].x);
+            euler.x = atan2f(m[2].y / cosf(euler.y), m[2].z / cosf(euler.y));
+            euler.z = atan2f(m[1].x / cosf(euler.y), m[0].x / cosf(euler.y));
+        }
 
         return euler;
     }
