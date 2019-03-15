@@ -20,7 +20,7 @@ public:
 		m_min = min;
 		m_max = max;
 
-		setFrequency(200.0);
+		setFrequency(50.0);
 		setResolution(12);
 
 		pinMode(m_pin, OUTPUT);

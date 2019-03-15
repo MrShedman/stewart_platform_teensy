@@ -9,11 +9,11 @@ struct pidProfile_t
 	float ki;
 	float kd;
 
-	float max_I;
-	float max_Out;
+	float max_i;
+	float max_out;
 
 	float dterm_lpf_hz;
-	float lpf_dT;
+	float lpf_dt;
 };
 
 class PID
@@ -22,24 +22,20 @@ public:
 
 	void init(const pidProfile_t& profile);
 
-	float update(float input, float setpoint);
-
 	void reset();
+
+	float update(float input, float setpoint);
 
 	float get_output() const;
 
 private:
 
-	float p_gain;
-	float i_gain;
-	float d_gain;
+	pidProfile_t prof;
 
-	float max_output;
-	float max_i;
-
-	float i_mem;
+	float iterm;
 	float output;
 	float last_d_error;
 
+    bool use_dterm_filter;
 	pt1Filter_t dterm_filter;
 };

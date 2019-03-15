@@ -26,7 +26,7 @@ public:
 
     const float servo_min = 800.0;
     const float servo_max = 2200.0;
-    const float servo_rate = 1600/PI;
+    const float servo_rate = 10000/PI;
     const float servo_zeros[6] = {1475.0, 1470.0, 1490.0, 1480.0, 1460.0, 1490.0};
     const uint8_t servo_pins[6] = {5, 6, 9, 20, 21, 22};
 
@@ -153,7 +153,8 @@ public:
             else
             {
                 servo_pulse_widths[i] = servo_zeros[i] + (alpha[i] -  alpha_zero[i]) * servo_rate;
-            }            
+            }
+            servos[i].write(servo_pulse_widths[i]);
         }
     }
 };

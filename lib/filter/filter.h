@@ -3,12 +3,13 @@
 
 #include "Arduino.h"
 
-typedef struct pt1Filter_s {
+struct pt1Filter_t
+{
 	float state;
 	float k;
 	float RC;
 	float dT;
-} pt1Filter_t;
+};
 
 typedef float(*filterApplyFnPtr)(void *filter, float input);
 
