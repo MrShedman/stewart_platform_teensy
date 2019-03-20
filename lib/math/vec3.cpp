@@ -1,5 +1,6 @@
 #include "vec3.h"
 #include "quat.h"
+#include "angle.h"
 
 #include <math.h>
 
@@ -16,6 +17,11 @@ x(x),
 y(y),
 z(z)
 {}
+
+Vec3 polar(const Angle& angle, const float radius)
+{
+    return Vec3(cosf(angle.asRadians()), sinf(angle.asRadians()), 0.0) * radius;
+}
 
 Vec3 operator+(const Vec3& lhs, const Vec3& rhs)
 {

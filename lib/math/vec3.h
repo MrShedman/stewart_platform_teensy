@@ -1,6 +1,7 @@
 #pragma once
 
 class Quat;
+class Angle;
 
 class Vec3
 {
@@ -16,6 +17,8 @@ public:
         float el[3];
     };
 };
+
+Vec3 polar(const Angle& angle, const float radius);
 
 Vec3 operator+(const Vec3& lhs, const Vec3& rhs);
 

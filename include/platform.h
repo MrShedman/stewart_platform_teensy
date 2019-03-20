@@ -50,16 +50,8 @@ public:
 
         for (uint8_t i = 0; i < 6; i++)
         {
-            float mx = baseRadius * cosf(Angle(baseAngles[i]).asRadians());
-            float my = baseRadius * sinf(Angle(baseAngles[i]).asRadians());
-            baseJoint[i] = Vec3(mx, my, 0);
-        }
-
-        for (uint8_t i = 0; i < 6; i++)
-        {
-            float mx = platformRadius * cosf(Angle(platformAngles[i]).asRadians());
-            float my = platformRadius * sinf(Angle(platformAngles[i]).asRadians());
-            platformJoint[i] = Vec3(mx, my, 0);
+            baseJoint[i] = polar(baseAngles[i], baseRadius);
+            platformJoint[i] = polar(platformAngles[i], platformRadius);
         }
 
         calcQ();
