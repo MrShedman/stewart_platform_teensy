@@ -4,6 +4,7 @@
 #include "filter.h"
 #include "vec3.h"
 #include "mat33.h"
+#include "quat.h"
 
 #include "platform.h"
 

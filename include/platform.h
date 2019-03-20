@@ -4,6 +4,7 @@
 
 #include "vec3.h"
 #include "servo.h"
+#include "angle.h"
 
 class Platform 
 {
