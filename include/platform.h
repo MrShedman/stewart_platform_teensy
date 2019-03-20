@@ -47,15 +47,15 @@ public:
 
         for (uint8_t i = 0; i < 6; i++)
         {
-            float mx = baseRadius * cosf(radians(baseAngles[i]));
-            float my = baseRadius * sinf(radians(baseAngles[i]));
+            float mx = baseRadius * cosf(Angle(baseAngles[i]).asRadians());
+            float my = baseRadius * sinf(Angle(baseAngles[i]).asRadians());
             baseJoint[i] = Vec3(mx, my, 0);
         }
 
         for (uint8_t i = 0; i < 6; i++)
         {
-            float mx = platformRadius * cosf(radians(platformAngles[i]));
-            float my = platformRadius * sinf(radians(platformAngles[i]));
+            float mx = platformRadius * cosf(Angle(platformAngles[i]).asRadians());
+            float my = platformRadius * sinf(Angle(platformAngles[i]).asRadians());
             platformJoint[i] = Vec3(mx, my, 0);
         }
 
@@ -114,8 +114,7 @@ public:
     {
         for (uint8_t i = 0; i < 6; i++)
         {
-            float l_sq = dot(l[i], l[i]);
-            float L = l_sq - (legLength * legLength) + (hornLength * hornLength);
+            float L = length_sq(l[i]) - (legLength * legLength) + (hornLength * hornLength);
             float M = 2.0 * hornLength * (q[i].z - baseJoint[i].z);
             float N = 2.0 * hornLength * (cosf(beta[i]) * (q[i].x - baseJoint[i].x) + sinf(beta[i]) * (q[i].y - baseJoint[i].y));
             alpha[i] = asinf(L / sqrtf(M * M + N * N)) - atan2f(N, M);
