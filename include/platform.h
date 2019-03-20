@@ -106,7 +106,7 @@ public:
                     cy * cx * platformJoint[i].z;
 
             // translation
-            q[i] = translation + home_pose;
+            q[i] += translation + home_pose;
             l[i] = q[i] - baseJoint[i];
         }
     }
