@@ -21,11 +21,11 @@ uint32_t loop_duration_us = 0;
 void callback(const geometry_msgs::Pose& msg)
 {
     uint32_t t_start = micros();
-    Mat33 mat;
+
     Vec3 pos = Vec3(msg.position.x, msg.position.y, msg.position.z);
     Quat quat = Quat(msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w);
-    mat.setQuat(quat);
-    Vec3 rot = mat.getRPY();
+    Mat33 rot;
+    rot.setQuat(quat);
     platform.applyTranslationAndRotation(pos, rot);
     loop_duration_us = micros() - t_start;
 }

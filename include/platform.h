@@ -10,7 +10,9 @@ class Platform
 {
 public:
 
-    Vec3 translation, rotation, home_pose;
+    Vec3 translation, home_pose;
+    Mat33 rotation;
+
     Vec3 baseJoint[6];
     Vec3 platformJoint[6];
     Vec3 q[6];
@@ -27,7 +29,7 @@ public:
 
     const float servo_min = 800.0;
     const float servo_max = 2200.0;
-    const float servo_rate = 10000/PI;
+    const float servo_rate = 400/M_PI;
     const float servo_zeros[6] = {1475.0, 1470.0, 1490.0, 1480.0, 1460.0, 1490.0};
     const uint8_t servo_pins[6] = {5, 6, 9, 20, 21, 22};
 
@@ -40,7 +42,7 @@ public:
 
     const float platformAngles[6] = {322.9, 337.1, 82.9, 97.1, 202.9, 217.1};
 
-    const float beta[6] = {-8 * PI / 3, PI / 3, 0, -PI, -4 * PI / 3, -7 * PI / 3};
+    const float beta[6] = {-8 * M_PI / 3, M_PI / 3, 0, -M_PI, -4 * M_PI / 3, -7 * M_PI / 3};
 
     Platform()
     {
@@ -72,7 +74,7 @@ public:
         }
     }
 
-    void applyTranslationAndRotation(const Vec3& t, const Vec3& r)
+    void applyTranslationAndRotation(const Vec3& t, const Mat33& r)
     {
         rotation = r;
         translation = t;
@@ -83,12 +85,9 @@ public:
 
     void calcQ()
     {
-        Mat33 rot;
-        rot.setRPY(rotation);
-
         for (uint8_t i = 0; i < 6; i++)
         {
-            q[i] = translation + home_pose + rot * platformJoint[i];
+            q[i] = translation + home_pose + rotation * platformJoint[i];
             
             l[i] = q[i] - baseJoint[i];
         }
@@ -131,11 +130,11 @@ public:
         {
             if (i % 2) 
             { 
-                servo_pulse_widths[i] = servo_zeros[i] - (alpha[i] -  alpha_zero[i]) * servo_rate;
+                servo_pulse_widths[i] = servo_zeros[i] - (alpha[i] - alpha_zero[i]) * servo_rate;
             }
             else
             {
-                servo_pulse_widths[i] = servo_zeros[i] + (alpha[i] -  alpha_zero[i]) * servo_rate;
+                servo_pulse_widths[i] = servo_zeros[i] + (alpha[i] - alpha_zero[i]) * servo_rate;
             }
             servos[i].write(servo_pulse_widths[i]);
         }
