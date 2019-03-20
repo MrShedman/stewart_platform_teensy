@@ -83,30 +83,13 @@ public:
 
     void calcQ()
     {
-        const float cx = cosf(rotation.x);
-        const float sx = sinf(rotation.x);
-        const float cy = cosf(rotation.y);
-        const float sy = sinf(rotation.y); 
-        const float cz = cosf(rotation.z);
-        const float sz = sinf(rotation.z);
+        Mat33 rot;
+        rot.setRPY(rotation);
 
         for (uint8_t i = 0; i < 6; i++)
         {
-            // rotation
-            q[i].x = cz * cy * platformJoint[i].x +
-                    (-sz * cx + cz * sy * sx) * platformJoint[i].y +
-                    (sz * sx + cz * sy * cx) * platformJoint[i].z;
-
-            q[i].y = sz * cy * platformJoint[i].x +
-                    (cz * cx + sz * sy * sx) * platformJoint[i].y +
-                    (-cz * sx + sz * sy * cx) * platformJoint[i].z;
-
-            q[i].z = -sy * platformJoint[i].x +
-                    cy * sx * platformJoint[i].y +
-                    cy * cx * platformJoint[i].z;
-
-            // translation
-            q[i] += translation + home_pose;
+            q[i] = translation + home_pose + rot * platformJoint[i];
+            
             l[i] = q[i] - baseJoint[i];
         }
     }
