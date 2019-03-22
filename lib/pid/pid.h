@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Arduino.h"
 #include "filter.h"
 
 struct pidProfile_t

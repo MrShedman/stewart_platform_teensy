@@ -1,5 +1,15 @@
 #include "pid.h"
 
+namespace
+{
+    float constrain(float x, float min, float max)
+    {
+        if (x < min) return min;
+        if (x > max) return max;
+        return x;
+    }
+}
+
 void PID::init(const pidProfile_t& profile)
 {
     prof = profile;

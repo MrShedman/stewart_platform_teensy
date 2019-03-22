@@ -1,21 +1,18 @@
-
 #include "filter.h"
 
-#define M_LN2_FLOAT 0.69314718055994530942f
-#define M_PI_FLOAT  3.14159265358979323846f
-
-// NULL filter
+namespace
+{
+    const float TWO_PI = 6.28318530718;
+}
 
 float nullFilterApply(void *filter, float input)
 {
 	return input;
 }
 
-// PT1 Low Pass filter
-
 void pt1FilterInit(pt1Filter_t *filter, float f_cut, float dT)
 {
-	filter->RC = 1.0f / (2.0f * M_PI_FLOAT * f_cut);
+	filter->RC = 1.0f / (TWO_PI * f_cut);
 	filter->dT = dT;
 	filter->k = filter->dT / (filter->RC + filter->dT);
 }
@@ -28,9 +25,9 @@ float pt1FilterApply(pt1Filter_t *filter, float input)
 
 float pt1FilterApply4(pt1Filter_t *filter, float input, float f_cut, float dT)
 {
-	// Pre calculate and store RC
-	if (!filter->RC) {
-		filter->RC = 1.0f / (2.0f * M_PI_FLOAT * f_cut);
+	if (!filter->RC) 
+    {
+		filter->RC = 1.0f / (TWO_PI * f_cut);
 		filter->dT = dT;
 		filter->k = filter->dT / (filter->RC + filter->dT);
 	}

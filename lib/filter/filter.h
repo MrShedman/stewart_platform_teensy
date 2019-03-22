@@ -1,7 +1,4 @@
-
 #pragma once
-
-#include "Arduino.h"
 
 struct pt1Filter_t
 {
