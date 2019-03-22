@@ -27,6 +27,8 @@ public:
 
 	float get_output() const;
 
+    void set_gains(const float kp, const float ki, const float kd);
+
 private:
 
 	pidProfile_t prof;

@@ -57,3 +57,10 @@ float PID::get_output() const
 {
     return output;
 }
+
+void PID::set_gains(const float kp, const float ki, const float kd)
+{
+    prof.kp = kp;
+    prof.ki = ki;
+    prof.kd = kd;
+}
