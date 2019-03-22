@@ -7,9 +7,8 @@ class Angle
 {
 public:
 
-	Angle();
-
-	Angle(float angle_deg);
+    static Angle fromDegrees(const float deg);
+    static Angle fromRadians(const float rad);
 
     float asDegrees() const;
 
@@ -17,12 +16,10 @@ public:
 
 private:
 
+	Angle(const float rad);
+
 	float m_radians;
 };
-
-Angle degrees(float amount);
-
-Angle radians(float amount);
 
 bool operator ==(Angle left, Angle right);
 

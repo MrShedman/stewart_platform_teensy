@@ -2,19 +2,24 @@
 
 #include <math.h>
 
-Angle::Angle()
-    :
-m_radians(0.0)
-{}
-
-Angle::Angle(float angle_deg)
+Angle Angle::fromDegrees(const float deg)
 {
     // Normalize to [0, 360]
-    angle_deg = fmodf(angle_deg, 360.0);
-    if (angle_deg < 0.0)
-        angle_deg += 360.0;
+    float new_deg = fmodf(deg, 360.0);
+    if (new_deg < 0.0)
+        new_deg += 360.0;
 
-    m_radians = angle_deg * M_PI / 180.0;
+    return Angle(new_deg * M_PI / 180.0);
+}
+
+Angle Angle::fromRadians(const float rad)
+{
+    return Angle(rad);
+}
+
+Angle::Angle(float rad)
+{
+    m_radians = rad;
 }
 
 float Angle::asDegrees() const
@@ -25,16 +30,6 @@ float Angle::asDegrees() const
 float Angle::asRadians() const
 {
     return m_radians;
-}
-
-Angle degrees(float amount)
-{
-	return Angle(amount);
-}
-
-Angle radians(float amount)
-{
-	return Angle(amount * 180.0 / M_PI);
 }
 
 bool operator ==(Angle left, Angle right)
@@ -69,12 +64,12 @@ bool operator >=(Angle left, Angle right)
 
 Angle operator -(Angle right)
 {
-	return radians(-right.asRadians());
+	return Angle::fromRadians(-right.asRadians());
 }
 
 Angle operator +(Angle left, Angle right)
 {
-	return radians(left.asRadians() + right.asRadians());
+	return Angle::fromRadians(left.asRadians() + right.asRadians());
 }
 
 Angle& operator +=(Angle& left, Angle right)
@@ -84,7 +79,7 @@ Angle& operator +=(Angle& left, Angle right)
 
 Angle operator -(Angle left, Angle right)
 {
-	return radians(left.asRadians() - right.asRadians());
+	return Angle::fromRadians(left.asRadians() - right.asRadians());
 }
 
 Angle& operator -=(Angle& left, Angle right)
@@ -94,7 +89,7 @@ Angle& operator -=(Angle& left, Angle right)
 
 Angle operator *(Angle left, float right)
 {
-	return radians(left.asRadians() * right);
+	return Angle::fromRadians(left.asRadians() * right);
 }
 
 Angle operator *(float left, Angle right)
@@ -109,7 +104,7 @@ Angle& operator *=(Angle& left, float right)
 
 Angle operator /(Angle left, float right)
 {
-	return radians(left.asRadians() / right);
+	return Angle::fromRadians(left.asRadians() / right);
 }
 
 Angle& operator /=(Angle& left, float right)
@@ -124,7 +119,7 @@ float operator /(Angle left, Angle right)
 
 Angle operator %(Angle left, Angle right)
 {
-	return radians(fmodf(left.asRadians(), right.asRadians()));
+	return Angle::fromRadians(fmodf(left.asRadians(), right.asRadians()));
 }
 
 Angle& operator %=(Angle& left, Angle right)

@@ -50,8 +50,8 @@ public:
 
         for (uint8_t i = 0; i < 6; i++)
         {
-            baseJoint[i] = polar(baseAngles[i], baseRadius);
-            platformJoint[i] = polar(platformAngles[i], platformRadius);
+            baseJoint[i] = polar(Angle::fromDegrees(baseAngles[i]), baseRadius);
+            platformJoint[i] = polar(Angle::fromDegrees(platformAngles[i]), platformRadius);
         }
 
         calcQ();
