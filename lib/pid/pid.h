@@ -29,6 +29,10 @@ public:
 
     void set_gains(const float kp, const float ki, const float kd);
 
+    PID& set_kp(const float kp);
+    PID& set_ki(const float ki);
+    PID& set_kd(const float kd);
+
 private:
 
 	pidProfile_t prof;

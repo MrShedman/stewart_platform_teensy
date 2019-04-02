@@ -11,7 +11,6 @@ public:
     static Angle fromRadians(const float rad);
 
     float asDegrees() const;
-
     float asRadians() const;
 
 private:

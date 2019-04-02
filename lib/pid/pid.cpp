@@ -64,3 +64,20 @@ void PID::set_gains(const float kp, const float ki, const float kd)
     prof.ki = ki;
     prof.kd = kd;
 }
+
+PID& PID::set_kp(const float kp)
+{
+    prof.kp = kp;
+    return *this;
+}
+
+PID& PID::set_ki(const float ki)
+{
+    prof.ki = ki;
+    return *this;
+}
+PID& PID::set_kd(const float kd)
+{
+    prof.kd = kd;
+    return *this;
+}

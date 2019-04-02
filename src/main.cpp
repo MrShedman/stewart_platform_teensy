@@ -5,17 +5,19 @@
 #include "vec3.h"
 #include "mat33.h"
 #include "quat.h"
-
+#include "pid.h"
 #include "platform.h"
 
 Platform platform;
 
 #include "ArduinoHardware.h"
 #include "ros.h"
+#include "logger_ros.h"
 #include "geometry_msgs/Pose.h"
 #include "std_msgs/Float32MultiArray.h"
 
 ros::NodeHandle nh;
+ros::Logger logger(nh);
 
 uint32_t loop_duration_us = 0;
 void callback(const geometry_msgs::Pose& msg)
@@ -63,6 +65,11 @@ void setup()
     {
         nh.spinOnce();
     }
+
+    PID p;
+
+    p.set_kp(1.0).set_ki(0.1).set_kd(2.0);
+    p.set_gains(1.0, 0.1, 2.0);
 
     platform.init_servos();
 }
