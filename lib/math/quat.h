@@ -1,6 +1,6 @@
 #pragma once
 
-class Vec3;
+class Quat;
 class Angle;
 
 class Quat
@@ -11,13 +11,31 @@ public:
 
     Quat(const float x, const float y, const float z, const float w = 1.0);
 
-    Quat(const Vec3& axis, const Angle& angle);
+    Quat(const Quat& axis, const Angle& angle);
 
     float x;
     float y;
     float z;
     float w;
 };
+
+Quat operator+(const Quat& lhs, const Quat& rhs);
+
+Quat operator-(const Quat& lhs, const Quat& rhs);
+
+Quat operator*(const Quat& lhs, const float rhs);
+
+Quat operator/(const Quat& lhs, const float rhs);
+
+Quat& operator+=(Quat& lhs, const Quat& rhs);
+
+Quat& operator-=(Quat& lhs, const Quat& rhs);
+
+Quat& operator*=(Quat& lhs, const Quat& rhs);
+
+Quat& operator*=(Quat& lhs, const float rhs);
+
+Quat& operator/=(Quat& lhs, const float rhs);
 
 float dot(const Quat& lhs, const Quat& rhs);
 
@@ -27,4 +45,8 @@ float length(const Quat& q);
 
 Quat normalise(const Quat& q);
 
-Quat operator*(const Quat& lhs, const Quat& rhs);
+Quat lerp(const Quat& start, const Quat& end, const float factor);
+
+Quat nlerp(const Quat& start, const Quat& end, const float factor);
+
+Quat slerp(const Quat& start, const Quat& end, const float factor);
