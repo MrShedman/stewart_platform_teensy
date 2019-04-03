@@ -1,6 +1,6 @@
 #pragma once
 
-struct pt1Filter_t
+struct lowPassFilter_t 
 {
 	float state;
 	float k;
@@ -8,10 +8,17 @@ struct pt1Filter_t
 	float dT;
 };
 
-typedef float(*filterApplyFnPtr)(void *filter, float input);
+struct highPassFilter_t 
+{
+	float state;
+	float prev_input;
+	float alpha;
+	float RC;
+	float dT;
+};
 
-float nullFilterApply(void *filter, float input);
+void lowPassFilterInit(lowPassFilter_t *filter, float f_cut, float dT);
+float lowPassFilterApply(lowPassFilter_t *filter, float input);
 
-void pt1FilterInit(pt1Filter_t *filter, float f_cut, float dT);
-float pt1FilterApply(pt1Filter_t *filter, float input);
-float pt1FilterApply4(pt1Filter_t *filter, float input, float f_cut, float dT);
+void highPassFilterInit(highPassFilter_t *filter, float f_cut, float dT);
+float highPassFilterApply(highPassFilter_t *filter, float input);

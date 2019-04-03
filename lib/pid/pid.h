@@ -42,5 +42,5 @@ private:
 	float last_d_error;
 
     bool use_dterm_filter;
-	pt1Filter_t dterm_filter;
+	lowPassFilter_t dterm_filter;
 };

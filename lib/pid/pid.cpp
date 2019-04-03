@@ -17,7 +17,7 @@ void PID::init(const pidProfile_t& profile)
 
     if (prof.dterm_lpf_hz > 0.0 && prof.lpf_dt > 0.0)
     {
-        pt1FilterInit(&dterm_filter, prof.dterm_lpf_hz, prof.lpf_dt);
+        lowPassFilterInit(&dterm_filter, prof.dterm_lpf_hz, prof.lpf_dt);
         use_dterm_filter = true;
     }
 
@@ -44,7 +44,7 @@ float PID::update(float input, float setpoint)
 
     if (use_dterm_filter)
     {
-	    dterm = pt1FilterApply(&dterm_filter, dterm);
+	    dterm = lowPassFilterApply(&dterm_filter, dterm);
     }
 
 	output = pterm + iterm + dterm;

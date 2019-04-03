@@ -2,37 +2,32 @@
 
 namespace
 {
-    const float TWO_PI = 6.28318530718;
+	const float TWO_PI = 6.28318530718;
 }
 
-float nullFilterApply(void *filter, float input)
+void lowPassFilterInit(lowPassFilter_t *filter, float f_cut, float dT)
 {
-	return input;
-}
-
-void pt1FilterInit(pt1Filter_t *filter, float f_cut, float dT)
-{
-	filter->RC = 1.0f / (TWO_PI * f_cut);
+	filter->RC = 1.0 / (TWO_PI * f_cut);
 	filter->dT = dT;
 	filter->k = filter->dT / (filter->RC + filter->dT);
 }
 
-float pt1FilterApply(pt1Filter_t *filter, float input)
+float lowPassFilterApply(lowPassFilter_t *filter, float input)
 {
 	filter->state = filter->state + filter->k * (input - filter->state);
 	return filter->state;
 }
 
-float pt1FilterApply4(pt1Filter_t *filter, float input, float f_cut, float dT)
+void highPassFilterInit(highPassFilter_t *filter, float f_cut, float dT)
 {
-	if (!filter->RC) 
-    {
-		filter->RC = 1.0f / (TWO_PI * f_cut);
-		filter->dT = dT;
-		filter->k = filter->dT / (filter->RC + filter->dT);
-	}
+	filter->RC = 1.0 / (TWO_PI * f_cut);
+	filter->dT = dT;
+	filter->alpha = filter->RC / (filter->RC + filter->dT);
+}
 
-	filter->state = filter->state + filter->k * (input - filter->state);
-
+float highPassFilterApply(highPassFilter_t *filter, float input)
+{
+	filter->state = filter->alpha * (filter->state + input - filter->prev_input);
+	filter->prev_input = input;
 	return filter->state;
 }
