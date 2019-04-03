@@ -4,9 +4,6 @@
 
 #include "filter.h"
 
-highPassFilter_t filter_x;
-highPassFilter_t filter_y;
-
 const uint8_t ur_pin = 0;
 const uint8_t lr_pin = 1;
 const uint8_t ll_pin = 2;
@@ -14,80 +11,76 @@ const uint8_t ul_pin = 3;
 
 const uint8_t sense_pin = 14;
 
-IntervalTimer timer;
-
-const uint8_t FRAME_RATE = 200;
+const uint8_t TOUCH_FRAME_RATE = 200;
 const uint8_t CONTACT_FRAME_RATE = 30;
-const uint8_t NUM_SAMPLES = 1;
 
-volatile float px, py = 0;
-volatile float dx, dy = 0;
-volatile float fx, fy = 0;
-volatile bool state = 0;
-volatile uint8_t count = 0;
-volatile uint8_t count_limit = 0;
-volatile bool contact = false;
+struct axis_t
+{
+    float raw;
+    float min;
+    float max;
+    float mapped;
+    float delta;
+    float filtered;
+    float filtered_prev;
+    highPassFilter_t filter;
+};
 
-float min_x = 925.0;
-float max_x = 2990.0;
-float min_y = 940.0;
-float max_y = 3000.0;
+axis_t x_axis;
+axis_t y_axis;
+
+bool state = 0;
+bool contact = false;
+const float contact_threshold = 0.00002;
+
+PointList point_list;
 
 float read_sense_pin()
 {
-    float temp = 0.0;
-
-    for (uint8_t i = 0; i < NUM_SAMPLES; ++i)
-    {
-        temp += analogRead(sense_pin);
-    }
-
-    return temp / (float)NUM_SAMPLES;
+    return analogRead(sense_pin);
 }
 
-void timing_worker()
+void update_axis(axis_t* axis)
+{
+    axis->raw = read_sense_pin();
+    axis->mapped = map(axis->raw, axis->min, axis->max, -1.0, 1.0);
+    axis->filtered = highPassFilterApply(&axis->filter, axis->mapped);
+    axis->delta += abs(axis->filtered - axis->filtered_prev);
+    axis->filtered_prev = axis->filtered;
+}
+
+void update_touch(uint32_t currentDeltaTimeUs)
 {
     if (state)
     {
-        const float ay = read_sense_pin();
-        const float ny = map(ay, min_y, max_y, -1.0, 1.0);
-        const float nfy = highPassFilterApply(&filter_y, ny);
-        dy += abs(nfy - fy);
-        fy = nfy;
-        py = ny;
+        update_axis(&y_axis);
+
         digitalWriteFast(ur_pin, LOW);
         digitalWriteFast(ll_pin, HIGH);
     }
     else
     {
-        const float ax = read_sense_pin();
-        const float nx = map(ax, min_x, max_x, -1.0, 1.0);
-        const float nfx = highPassFilterApply(&filter_x, nx);
-        dx += abs(nfx - fx);
-        fx = nfx;
-        px = nx;
+        update_axis(&x_axis);
+
         digitalWriteFast(ur_pin, HIGH);
         digitalWriteFast(ll_pin, LOW);
+
+        point_list.put(Point{x_axis.mapped, y_axis.mapped});
     }
     
     state = !state;
-    count++;
-
-    if (count > count_limit)
-    {
-        contact = (dx * dy * 100000.0) < 2.0;
-        count = 0;
-        dx = 0;
-        dy = 0;
-    }
 }
 
-Point get_touch_point()
+void update_contact(uint32_t currentDeltaTimeUs)
 {
-    Point p;
-    p.x = px;
-    p.y = py;
-    return p;
+    contact = (x_axis.delta * y_axis.delta) < contact_threshold;
+    x_axis.delta = 0.0;
+    y_axis.delta = 0.0;
+}
+
+PointList& get_touch_list()
+{
+    return point_list;
 }
 
 bool is_touched()
@@ -97,10 +90,6 @@ bool is_touched()
 
 void init_touch()
 {
-    const float f_cut_hz = 100.0;
-    highPassFilterInit(&filter_x, f_cut_hz, 1.0 / FRAME_RATE);
-    highPassFilterInit(&filter_y, f_cut_hz, 1.0 / FRAME_RATE);
-
     digitalWriteFast(ul_pin, HIGH); 
     digitalWriteFast(lr_pin, LOW);
 
@@ -112,8 +101,14 @@ void init_touch()
     analogReadResolution(12);
     //analogReadAveraging(32);
  
-    count_limit = 2 * FRAME_RATE / CONTACT_FRAME_RATE;
-
     state = 0;
-	timer.begin(timing_worker, 1000000 / (FRAME_RATE * 2));
+
+    x_axis.min = 925.0;
+    x_axis.max = 2990.0;
+    y_axis.min = 940.0;
+    y_axis.max = 3000.0;
+
+    const float f_cut_hz = 100.0;
+    highPassFilterInit(&x_axis.filter, f_cut_hz, 1.0 / TOUCH_FRAME_RATE);
+    highPassFilterInit(&y_axis.filter, f_cut_hz, 1.0 / TOUCH_FRAME_RATE);
 }
