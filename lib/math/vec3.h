@@ -11,11 +11,13 @@ public:
 
     Vec3(const float x, const float y, const float z);
 
-    union
-    {
-        struct {float x,y,z;};
-        float el[3];
-    };
+    float& operator[](int index);
+
+    const float& operator[](int index) const;
+    
+    float x;
+    float y;
+    float z;
 };
 
 Vec3 polar(const Angle& angle, const float radius);

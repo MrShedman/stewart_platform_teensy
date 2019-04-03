@@ -23,6 +23,28 @@ Vec3 polar(const Angle& angle, const float radius)
     return Vec3(cosf(angle.asRadians()), sinf(angle.asRadians()), 0.0) * radius;
 }
 
+float& Vec3::operator[](int index)
+{
+    switch (index)
+    {
+        case 0: return x;
+        case 1: return y;
+        case 2: return z;
+        default: return x;
+    }
+}
+
+const float& Vec3::operator[](int index) const
+{
+    switch (index)
+    {
+        case 0: return x;
+        case 1: return y;
+        case 2: return z;
+        default: return x;
+    }
+}
+
 Vec3 operator+(const Vec3& lhs, const Vec3& rhs)
 {
     return Vec3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);

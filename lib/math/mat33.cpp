@@ -84,15 +84,15 @@ void Mat33::setQuat(const Quat& q)
 Mat33 identity()
 {
     Mat33 m;
-    m.m[0].x = 1.0;
-    m.m[1].y = 1.0;
-    m.m[2].z = 1.0;
+    m.m[0][0] = 1.0;
+    m.m[1][1] = 1.0;
+    m.m[2][2] = 1.0;
     return m;
 }
 
 float cofac(const Mat33& m, int r1, int c1, int r2, int c2)
 {
-    return m.m[r1].el[c1] * m.m[r2].el[c2] - m.m[r1].el[c2] * m.m[r2].el[c1];
+    return m.m[r1][c1] * m.m[r2][c2] - m.m[r1][c2] * m.m[r2][c1];
 }
 
 float tdotx(const Mat33& m, const Vec3& v) 
