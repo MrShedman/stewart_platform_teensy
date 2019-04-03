@@ -7,6 +7,7 @@
 #include "quat.h"
 #include "pid.h"
 #include "platform.h"
+#include "rate.h"
 
 Platform platform;
 
@@ -36,16 +37,7 @@ std_msgs::Float32MultiArray arm_msg;
 ros::Subscriber<geometry_msgs::Pose> pose_sub("/target_pose", callback);
 ros::Publisher arm_length_pub("/arm_lengths", &arm_msg);
 
-uint32_t loop_start_time = 0;
-float loop_rate = 100.0;
-const uint32_t loop_time_us = 1e6 / loop_rate;
-
-void spin_once()
-{
-    while (micros() - loop_start_time < loop_time_us);
-
-    loop_start_time = micros();
-}
+Rate rate(100.0);
 
 void setup() 
 {
@@ -92,5 +84,5 @@ void loop()
     arm_length_pub.publish(&arm_msg);
 
     nh.spinOnce();
-    spin_once();
+    rate.sleep();
 }
