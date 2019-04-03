@@ -25,13 +25,13 @@ public:
 
 	float update(float input, float setpoint);
 
-	float get_output() const;
+	float getOutput() const;
 
-    void set_gains(const float kp, const float ki, const float kd);
+    void setGains(const float kp, const float ki, const float kd);
 
-    PID& set_kp(const float kp);
-    PID& set_ki(const float ki);
-    PID& set_kd(const float kd);
+    PID& setkp(const float kp);
+    PID& setki(const float ki);
+    PID& setkd(const float kd);
 
 private:
 

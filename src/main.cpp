@@ -68,8 +68,8 @@ void setup()
 
     PID p;
 
-    p.set_kp(1.0).set_ki(0.1).set_kd(2.0);
-    p.set_gains(1.0, 0.1, 2.0);
+    p.setkp(1.0).setki(0.1).setkd(2.0);
+    p.setGains(1.0, 0.1, 2.0);
 
     platform.init_servos();
 }

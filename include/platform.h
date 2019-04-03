@@ -113,21 +113,23 @@ public:
             float N0 = 2.0 * hornLength * (cosf(beta[i]) * (q[i].x - baseJoint[i].x) + sinf(beta[i]) * (q[i].y - baseJoint[i].y));
 
             alpha_zero[i] = asinf(L0 / sqrtf(M0 * M0 + N0 * N0)) - atan2f(N0, M0);
-        } 
+        }
     }
 
     void calcPulseWidths()
     {
         for (uint8_t i = 0; i < 6; i++)
         {
+            const float width = (alpha[i] - alpha_zero[i]) * servo_rate;
             if (i % 2) 
             { 
-                servo_pulse_widths[i] = servo_zeros[i] - (alpha[i] - alpha_zero[i]) * servo_rate;
+                servo_pulse_widths[i] = servo_zeros[i] - width;
             }
             else
             {
-                servo_pulse_widths[i] = servo_zeros[i] + (alpha[i] - alpha_zero[i]) * servo_rate;
+                servo_pulse_widths[i] = servo_zeros[i] + width;
             }
+            
             servos[i].write(servo_pulse_widths[i]);
         }
     }

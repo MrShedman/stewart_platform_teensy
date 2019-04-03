@@ -50,33 +50,33 @@ float PID::update(float input, float setpoint)
 	output = pterm + iterm + dterm;
 	output = constrain(output, -prof.max_out, prof.max_out);
 
-    return get_output();
+    return getOutput();
 }
 
-float PID::get_output() const
+float PID::getOutput() const
 {
     return output;
 }
 
-void PID::set_gains(const float kp, const float ki, const float kd)
+void PID::setGains(const float kp, const float ki, const float kd)
 {
     prof.kp = kp;
     prof.ki = ki;
     prof.kd = kd;
 }
 
-PID& PID::set_kp(const float kp)
+PID& PID::setkp(const float kp)
 {
     prof.kp = kp;
     return *this;
 }
 
-PID& PID::set_ki(const float ki)
+PID& PID::setki(const float ki)
 {
     prof.ki = ki;
     return *this;
 }
-PID& PID::set_kd(const float kd)
+PID& PID::setkd(const float kd)
 {
     prof.kd = kd;
     return *this;
