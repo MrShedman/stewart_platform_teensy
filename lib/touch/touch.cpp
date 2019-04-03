@@ -11,8 +11,8 @@ const uint8_t ul_pin = 3;
 
 const uint8_t sense_pin = 14;
 
-const uint8_t TOUCH_FRAME_RATE = 200;
-const uint8_t CONTACT_FRAME_RATE = 30;
+const uint16_t TOUCH_FRAME_RATE = 200;
+const uint16_t CONTACT_FRAME_RATE = 30;
 
 struct axis_t
 {

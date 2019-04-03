@@ -4,8 +4,8 @@
 
 #include "circular_buffer.h"
 
-extern const uint8_t TOUCH_FRAME_RATE;
-extern const uint8_t CONTACT_FRAME_RATE;
+extern const uint16_t TOUCH_FRAME_RATE;
+extern const uint16_t CONTACT_FRAME_RATE;
 
 struct Point
 {
