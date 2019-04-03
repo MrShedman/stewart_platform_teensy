@@ -7,7 +7,7 @@ class CircularBuffer
 {
 public:
 
-	void put(T item)
+	void push(T item)
 	{
 		buf_[head_] = item;
 
@@ -21,7 +21,7 @@ public:
 		full_ = head_ == tail_;
 	}
 
-	T get()
+	T pop()
 	{
 		if(empty())
 		{
@@ -34,6 +34,16 @@ public:
 		tail_ = (tail_ + 1) % max_size_;
 
 		return val;
+	}
+
+	const T& front() const
+	{
+		return buf_[tail_];
+	}
+
+	const T& back() const
+	{
+		return buf_[head_];
 	}
 
 	void reset()

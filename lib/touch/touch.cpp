@@ -65,7 +65,7 @@ void update_touch(uint32_t currentDeltaTimeUs)
         digitalWriteFast(ur_pin, HIGH);
         digitalWriteFast(ll_pin, LOW);
 
-        point_list.put(Point{x_axis.mapped, y_axis.mapped});
+        point_list.push(Point{x_axis.mapped, y_axis.mapped});
     }
     
     state = !state;
