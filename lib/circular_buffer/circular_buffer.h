@@ -46,6 +46,18 @@ public:
 		return buf_[head_];
 	}
 
+	T& operator[] (const uint32_t index)
+	{
+		const uint32_t id = (index + tail_) % max_size_;
+		return buf_[id];
+	}
+
+	const T& operator[] (const uint32_t index) const
+	{
+		const uint32_t id = (index + tail_) % max_size_;
+		return buf_[id];
+	}
+
 	void reset()
 	{
 		head_ = tail_;
