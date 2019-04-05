@@ -11,8 +11,7 @@ const uint8_t ul_pin = 3;
 
 const uint8_t sense_pin = 14;
 
-const uint16_t TOUCH_FRAME_RATE = 200;
-const uint16_t CONTACT_FRAME_RATE = 30;
+const uint8_t TOUCH_FRAME_RATE = 200;
 
 struct axis_t
 {
@@ -21,9 +20,8 @@ struct axis_t
     float max;
     float mapped;
     float delta;
-    float filtered;
-    float filtered_prev;
     highPassFilter_t filter;
+    CircularBuffer<float, 8> filtered_list;
 };
 
 axis_t x_axis;
@@ -31,9 +29,9 @@ axis_t y_axis;
 
 bool state = 0;
 bool contact = false;
-const float contact_threshold = 0.00002;
+const float contact_threshold = 0.0001;
 
-PointList point_list;
+TouchList touch_list;
 
 float read_sense_pin()
 {
@@ -44,9 +42,12 @@ void update_axis(axis_t* axis)
 {
     axis->raw = read_sense_pin();
     axis->mapped = map(axis->raw, axis->min, axis->max, -1.0, 1.0);
-    axis->filtered = highPassFilterApply(&axis->filter, axis->mapped);
-    axis->delta += abs(axis->filtered - axis->filtered_prev);
-    axis->filtered_prev = axis->filtered;
+    axis->filtered_list.push(highPassFilterApply(&axis->filter, axis->mapped));
+    axis->delta = 0.0;
+    for (uint32_t i = 1; i < axis->filtered_list.size(); ++i)
+    {
+        axis->delta += abs(axis->filtered_list[i] - axis->filtered_list[i - 1]);
+    }
 }
 
 void update_touch(uint32_t currentDeltaTimeUs)
@@ -65,22 +66,17 @@ void update_touch(uint32_t currentDeltaTimeUs)
         digitalWriteFast(ur_pin, HIGH);
         digitalWriteFast(ll_pin, LOW);
 
-        point_list.push(Point{x_axis.mapped, y_axis.mapped});
+        contact = (x_axis.delta * y_axis.delta) < contact_threshold;
+
+        touch_list.push(Touch{x_axis.mapped, y_axis.mapped, contact});
     }
     
     state = !state;
 }
 
-void update_contact(uint32_t currentDeltaTimeUs)
+TouchList& get_touch_list()
 {
-    contact = (x_axis.delta * y_axis.delta) < contact_threshold;
-    x_axis.delta = 0.0;
-    y_axis.delta = 0.0;
-}
-
-PointList& get_touch_list()
-{
-    return point_list;
+    return touch_list;
 }
 
 bool is_touched()
