@@ -21,11 +21,11 @@ public:
     float alpha[6];
     float alpha_zero[6];
 
-    const float initial_height = 120.0;
-    const float baseRadius = 65.43;
-    const float platformRadius = 76.35;
-    const float hornLength = 36.0;
-    const float legLength = 125.0;
+    const float initial_height = 200.0;
+    const float baseRadius = 80.0;
+    const float platformRadius = 50.0;
+    const float hornLength = 20.0;
+    const float legLength = 210.0;
 
     const float servo_min = 800.0;
     const float servo_max = 2200.0;
