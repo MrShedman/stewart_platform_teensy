@@ -2,29 +2,29 @@
 
 #include <Arduino.h>
 
+#include "time.h"
+
 class Rate
 {
 public:
 
     Rate(const float hz)
     :
-    m_rate(hz),
-    m_loop_time_us(1e6 / m_rate),
-    m_loop_start_time(micros())
+    m_loop_time(seconds(1e6 / m_rate)),
+    m_loop_start_time(microseconds(micros())
     {
 
     }
 
     void sleep()
     {
-        while (micros() - m_loop_start_time < m_loop_time_us);
+        while (microseconds(micros()) - m_loop_start_time < m_loop_time);
 
-        m_loop_start_time = micros();
+        m_loop_start_time = microseconds(micros());
     }
 
 private:
 
-    const float m_rate;
-    const uint32_t m_loop_time_us;
-    uint32_t m_loop_start_time;
+    const Time m_loop_time;
+    Time m_loop_start_time;
 };
