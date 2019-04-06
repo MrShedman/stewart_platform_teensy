@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Arduino.h"
+#include <Arduino.h>
+
+#include "logger.h"
 
 class Servo
 {
@@ -10,9 +12,7 @@ public:
 	{
 		if (!digitalPinHasPWM(pin))
 		{
-			Serial.print("Pin: ");
-			Serial.print(pin);
-			Serial.println(" does not support PWM!");
+			LOG_FATAL("Pin %d does not support PWM!", (uint32_t)pin);
             return;
 		}
 
