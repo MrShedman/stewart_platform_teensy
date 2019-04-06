@@ -59,13 +59,31 @@ void update_axis(axis_t* axis)
     {
         axis->delta += abs(axis->noise_list[i] - axis->noise_list[i - 1]);
     }
-    for (uint32_t i = 1; i < axis->position_list.size(); ++i)
+
+    if (axis->position_list.size() > 1)
     {
-        const float dp = axis->position_list[i] - axis->position_list[i - 1];
-        const Time dt = axis->time_list[i] - axis->time_list[i - 1];
-        axis->velocity += (dp / dt.asSeconds());
+        for (uint32_t i = 1; i < axis->position_list.size(); ++i)
+        {
+            const float dp = axis->position_list[i] - axis->position_list[i - 1];
+            const Time dt = axis->time_list[i] - axis->time_list[i - 1];
+            axis->velocity += (dp / dt.asSeconds());
+        }
+
+        axis->velocity /= (axis->position_list.size() - 1);
     }
-    axis->velocity /= (axis->position_list.size() - 1);
+}
+
+void push_new_touch()
+{
+    Touch t;
+    t.x = x_axis.position_list.back();
+    t.y = y_axis.position_list.back();
+    t.vx = x_axis.velocity;
+    t.vy = y_axis.velocity;
+    t.time = (x_axis.time_list.back() + y_axis.time_list.back()) * 0.5;
+    t.contact = contact;
+    
+    touch_list.push(t);
 }
 
 void update_touch(uint32_t currentDeltaTimeUs)
@@ -86,15 +104,7 @@ void update_touch(uint32_t currentDeltaTimeUs)
 
         contact = (x_axis.delta * y_axis.delta) < contact_threshold;
 
-        Touch t;
-        t.x = x_axis.position_list.back();
-        t.y = y_axis.position_list.back();
-        t.vx = x_axis.velocity;
-        t.vy = y_axis.velocity;
-        t.time = (x_axis.time_list.back() + y_axis.time_list.back()) * 0.5;
-        t.contact = contact;
-        
-        touch_list.push(t);
+        push_new_touch();
     }
     
     state = !state;
