@@ -13,15 +13,24 @@ const uint8_t sense_pin = 14;
 
 const uint8_t TOUCH_FRAME_RATE = 200;
 
+const uint8_t axis_list_size = 32;
+const uint8_t noise_list_size = 8;
+
+typedef CircularBuffer<float, axis_list_size> PositionList;
+typedef CircularBuffer<Time, axis_list_size> TimeList;
+typedef CircularBuffer<float, noise_list_size> NoiseList;
+
 struct axis_t
 {
     float raw;
     float min;
     float max;
-    float mapped;
     float delta;
+    float velocity;
     highPassFilter_t filter;
-    CircularBuffer<float, 8> filtered_list;
+    PositionList position_list;
+    TimeList time_list;
+    NoiseList noise_list;
 };
 
 axis_t x_axis;
@@ -41,13 +50,22 @@ float read_sense_pin()
 void update_axis(axis_t* axis)
 {
     axis->raw = read_sense_pin();
-    axis->mapped = map(axis->raw, axis->min, axis->max, -1.0, 1.0);
-    axis->filtered_list.push(highPassFilterApply(&axis->filter, axis->mapped));
+    axis->time_list.push(microseconds(micros()));
+    axis->position_list.push(map(axis->raw, axis->min, axis->max, -1.0, 1.0));
+    axis->noise_list.push(highPassFilterApply(&axis->filter, axis->position_list.back()));
     axis->delta = 0.0;
-    for (uint32_t i = 1; i < axis->filtered_list.size(); ++i)
+    axis->velocity = 0.0;
+    for (uint32_t i = 1; i < axis->noise_list.size(); ++i)
     {
-        axis->delta += abs(axis->filtered_list[i] - axis->filtered_list[i - 1]);
+        axis->delta += abs(axis->noise_list[i] - axis->noise_list[i - 1]);
     }
+    for (uint32_t i = 1; i < axis->position_list.size(); ++i)
+    {
+        const float dp = axis->position_list[i] - axis->position_list[i - 1];
+        const Time dt = axis->time_list[i] - axis->time_list[i - 1];
+        axis->velocity += (dp / dt.asSeconds());
+    }
+    axis->velocity /= (axis->position_list.size() - 1);
 }
 
 void update_touch(uint32_t currentDeltaTimeUs)
@@ -68,7 +86,15 @@ void update_touch(uint32_t currentDeltaTimeUs)
 
         contact = (x_axis.delta * y_axis.delta) < contact_threshold;
 
-        touch_list.push(Touch{x_axis.mapped, y_axis.mapped, contact});
+        Touch t;
+        t.x = x_axis.position_list.back();
+        t.y = y_axis.position_list.back();
+        t.vx = x_axis.velocity;
+        t.vy = y_axis.velocity;
+        t.time = (x_axis.time_list.back() + y_axis.time_list.back()) * 0.5;
+        t.contact = contact;
+        
+        touch_list.push(t);
     }
     
     state = !state;
