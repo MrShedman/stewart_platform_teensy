@@ -7,18 +7,24 @@ class Angle
 {
 public:
 
-    static Angle fromDegrees(const float deg);
-    static Angle fromRadians(const float rad);
-
     float asDegrees() const;
     float asRadians() const;
 
 private:
 
-	Angle(const float rad);
+    friend Angle degrees(const float deg);
+    friend Angle radians(const float rad);
+
+	explicit Angle(const float rad);
+
+private:
 
 	float m_radians;
 };
+
+Angle degrees(const float deg);
+
+Angle radians(const float rad);
 
 bool operator ==(Angle left, Angle right);
 
