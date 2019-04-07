@@ -27,11 +27,11 @@ public:
 
 	float getOutput() const;
 
-    void setGains(const float kp, const float ki, const float kd);
+	void setGains(const float kp, const float ki, const float kd);
 
-    PID& setkp(const float kp);
-    PID& setki(const float ki);
-    PID& setkd(const float kd);
+	PID& setkp(const float kp);
+	PID& setki(const float ki);
+	PID& setkd(const float kd);
 
 private:
 
@@ -41,6 +41,6 @@ private:
 	float output;
 	float last_d_error;
 
-    bool use_dterm_filter;
+	bool use_dterm_filter;
 	lowPassFilter_t dterm_filter;
 };
