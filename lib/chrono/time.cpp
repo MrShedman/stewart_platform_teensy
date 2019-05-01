@@ -1,5 +1,10 @@
 #include "time.h"
 
+Time Time::now()
+{
+    return microseconds(micros());
+}
+
 Time::Time() 
 :
 m_microseconds(0)

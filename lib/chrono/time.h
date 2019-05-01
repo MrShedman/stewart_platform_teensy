@@ -14,6 +14,8 @@ public:
 
     int64_t asMicroseconds() const;
 
+    static Time now();
+
 private:
 
     friend Time seconds(float);
