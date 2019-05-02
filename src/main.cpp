@@ -20,17 +20,18 @@ Platform platform;
 ros::NodeHandle nh;
 ros::Logger logger(nh);
 
-uint32_t loop_duration_us = 0;
+Time loop_duration;
+
 void callback(const geometry_msgs::Pose& msg)
 {
-    uint32_t t_start = micros();
+    Time t_start = Time::now();
 
     Vec3 pos = Vec3(msg.position.x, msg.position.y, msg.position.z);
     Quat quat = Quat(msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w);
     Mat33 rot;
     rot.setQuat(quat);
     platform.applyTranslationAndRotation(pos, rot);
-    loop_duration_us = micros() - t_start;
+    loop_duration = Time::now() - t_start;
 }
 
 std_msgs::Float32MultiArray arm_msg;
@@ -79,7 +80,7 @@ void loop()
     arm_msg.data[3] = platform.servo_pulse_widths[3];
     arm_msg.data[4] = platform.servo_pulse_widths[4];
     arm_msg.data[5] = platform.servo_pulse_widths[5];
-    arm_msg.data[6] = (float)loop_duration_us;
+    arm_msg.data[6] = loop_duration.asSeconds();
     
     arm_length_pub.publish(&arm_msg);
 
