@@ -60,7 +60,7 @@ void update_axis(axis_t* axis)
         axis->delta += abs(axis->noise_list[i] - axis->noise_list[i - 1]);
     }
 
-    if (axis->position_list.size() > 1)
+    if (axis->position_list.full())
     {
         for (uint32_t i = 1; i < axis->position_list.size(); ++i)
         {
@@ -69,7 +69,7 @@ void update_axis(axis_t* axis)
             axis->velocity += (dp / dt.asSeconds());
         }
 
-        axis->velocity /= (axis->position_list.size() - 1);
+        axis->velocity /= axis->position_list.capacity();
     }
 }
 
