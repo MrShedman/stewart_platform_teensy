@@ -40,11 +40,11 @@ const char* getLevelString(Level level)
 {
     switch (level)
     {
-        case Debug: return "DEBUG";
-        case Info:  return "INFO";
-        case Warn:  return "WARN";
-        case Error: return "ERROR";
-        case Fatal: return "FATAL";
+        case Level::Debug: return "DEBUG";
+        case Level::Info:  return "INFO";
+        case Level::Warn:  return "WARN";
+        case Level::Error: return "ERROR";
+        case Level::Fatal: return "FATAL";
         default: return "UNKNO";
     }
 }

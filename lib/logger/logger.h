@@ -1,6 +1,6 @@
 #pragma once
 
-enum Level
+enum class Level
 {
     Debug,
     Info,

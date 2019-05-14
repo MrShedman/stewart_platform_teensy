@@ -39,11 +39,11 @@ public:
             // success
             switch (level)
             {
-                case Debug: return nh_.logdebug(log_buffer);
-                case Info:  return nh_.loginfo(log_buffer);
-                case Warn:  return nh_.logwarn(log_buffer);
-                case Error: return nh_.logerror(log_buffer);
-                case Fatal: return nh_.logfatal(log_buffer);
+                case Level::Debug: return nh_.logdebug(log_buffer);
+                case Level::Info:  return nh_.loginfo(log_buffer);
+                case Level::Warn:  return nh_.logwarn(log_buffer);
+                case Level::Error: return nh_.logerror(log_buffer);
+                case Level::Fatal: return nh_.logfatal(log_buffer);
                 default:    return nh_.logerror(log_error_msg);
             }
         }

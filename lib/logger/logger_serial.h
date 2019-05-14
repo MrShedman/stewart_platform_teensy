@@ -3,12 +3,15 @@
 #include <Arduino.h>
 
 #include "logger.h"
+#include "Stream.h"
 
 class LoggerSerial : public LoggerBase
 {
 public:
 
-    LoggerSerial()
+    LoggerSerial(Stream* stream_ptr = &Serial)
+    :
+    stream_ptr(stream_ptr)
     {
         setLogger(this);
     }
@@ -21,8 +24,12 @@ public:
         va_list ap;
         va_start(ap, fmt);
 
-        vdprintf((int)&Serial, fmt, ap);
+        vdprintf((int)stream_ptr, fmt, ap);
 
         Serial.println();
     }
+
+private:
+
+    Stream* stream_ptr;
 };
