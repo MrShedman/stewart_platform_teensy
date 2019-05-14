@@ -8,20 +8,9 @@ class Rate
 {
 public:
 
-    Rate(const float hz)
-    :
-    m_loop_time(seconds(1.0 / hz)),
-    m_loop_start_time(Time::now())
-    {
+    Rate(const float hz);
 
-    }
-
-    void sleep()
-    {
-        while (Time::now() - m_loop_start_time < m_loop_time);
-
-        m_loop_start_time = Time::now();
-    }
+    void sleep();
 
 private:
 
