@@ -3,6 +3,7 @@
 #include "angle.h"
 
 #include <math.h>
+#include <algorithm>
 
 Vec3::Vec3()
 :
@@ -138,6 +139,38 @@ float length_sq(const Vec3& v)
 float length(const Vec3& v)
 {
     return sqrtf(length_sq(v));
+}
+
+float distance(const Vec3& lhs, const Vec3& rhs)
+{
+    return length(rhs - lhs);
+}
+
+float distance_sq(const Vec3& lhs, const Vec3& rhs)
+{
+    return length_sq(rhs - lhs);
+}
+
+Vec3 min(const Vec3& lhs, const Vec3& rhs)
+{
+    Vec3 result;
+
+    result.x = std::min(lhs.x, rhs.x);
+    result.y = std::min(lhs.y, rhs.y);
+    result.z = std::min(lhs.z, rhs.z);
+
+    return result;
+}
+
+Vec3 max(const Vec3& lhs, const Vec3& rhs)
+{
+    Vec3 result;
+
+    result.x = std::max(lhs.x, rhs.x);
+    result.y = std::max(lhs.y, rhs.y);
+    result.z = std::max(lhs.z, rhs.z);
+
+    return result;
 }
 
 Vec3 normalise(const Vec3& v)
