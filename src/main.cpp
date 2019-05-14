@@ -1,15 +1,9 @@
 #include <Arduino.h>
 
-#include "servo.h"
-#include "filter.h"
-#include "vec3.h"
-#include "mat33.h"
-#include "quat.h"
-#include "pid.h"
 #include "platform.h"
-#include "rate.h"
 #include "pattern_manager.h"
 #include "controller.h"
+#include "rate.h"
 
 Platform platform;
 PatternManager pattern_manager;
