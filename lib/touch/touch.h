@@ -4,15 +4,14 @@
 
 #include "circular_buffer.h"
 #include "time.h"
+#include "vec3.h"
 
 extern const uint8_t TOUCH_FRAME_RATE;
 
 struct Touch
 {
-    float x;
-    float y;
-    float vx;
-    float vy;
+    Vec3 pos;
+    Vec3 vel;
     Time time;
     bool contact;
 };

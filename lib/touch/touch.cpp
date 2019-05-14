@@ -76,10 +76,10 @@ void update_axis(axis_t* axis)
 void push_new_touch()
 {
     Touch t;
-    t.x = x_axis.position_list.back();
-    t.y = y_axis.position_list.back();
-    t.vx = x_axis.velocity;
-    t.vy = y_axis.velocity;
+    t.pos.x = x_axis.position_list.back();
+    t.pos.y = y_axis.position_list.back();
+    t.vel.x = x_axis.velocity;
+    t.vel.y = y_axis.velocity;
     t.time = (x_axis.time_list.back() + y_axis.time_list.back()) * 0.5;
     t.contact = contact;
     
