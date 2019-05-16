@@ -12,14 +12,21 @@ PatternList m_current_pattern;
 std::array<PatternBase*, (uint32_t)PatternList::Count> m_patterns;
 const Vec3 zero;
 
+PatternCircle       pcircle(Vec3(0.0, 0.0, 0.0), 0.5, 0.05);
+PatternRectangle    prect(AABB({Vec3(-1.0, 1.0, 0.0), Vec3(1.0, -1.0, 0.0)}), 0.05);
+PatternStar         pstar(Vec3(0.0, 0.0, 0.0), 0.5, 0.05);
+PatternCross        pcross(Vec3(0.0, 0.0, 0.0), 0.5, 0.05);
+PatternSpiral       pspiral(Vec3(0.0, 0.0, 0.0), 0.1, 0.5, 0.05);
+PatternRandom       prand(AABB({Vec3(-1.0, 1.0, 0.0), Vec3(1.0, -1.0, 0.0)}), 0.05);
+
 void init_pattern_manager()
 {
-    m_patterns[(uint32_t)PatternList::Circle] = new PatternCircle(Vec3(0.0, 0.0, 0.0), 0.5, 0.05);
-    m_patterns[(uint32_t)PatternList::Rectangle] = new PatternRectangle(AABB({Vec3(-1.0, 1.0, 0.0), Vec3(1.0, -1.0, 0.0)}), 0.05);
-    m_patterns[(uint32_t)PatternList::Star] = new PatternStar(Vec3(0.0, 0.0, 0.0), 0.5, 0.05);
-    m_patterns[(uint32_t)PatternList::Cross] = new PatternCross(Vec3(0.0, 0.0, 0.0), 0.5, 0.05);
-    m_patterns[(uint32_t)PatternList::Spiral] = new PatternSpiral(Vec3(0.0, 0.0, 0.0), 0.1, 0.5, 0.05);
-    m_patterns[(uint32_t)PatternList::Random] = new PatternRandom(AABB({Vec3(-1.0, 1.0, 0.0), Vec3(1.0, -1.0, 0.0)}), 0.05);
+    m_patterns[(uint32_t)PatternList::Circle] = &pcircle;
+    m_patterns[(uint32_t)PatternList::Rectangle] = &prect;
+    m_patterns[(uint32_t)PatternList::Star] = &pstar;
+    m_patterns[(uint32_t)PatternList::Cross] = &pcross;
+    m_patterns[(uint32_t)PatternList::Spiral] = &pspiral;
+    m_patterns[(uint32_t)PatternList::Random] = &prand;
 
     set_pattern(PatternList::None);
 }
