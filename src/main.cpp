@@ -7,16 +7,6 @@
 #include "connectivity.h"
 #include "scheduler.h"
 
-Platform platform;
-PatternManager pattern_manager;
-
-Controller controller(platform, pattern_manager);
-
-void update_control(uint32_t currentTimeUs)
-{
-    controller.update();
-}
-
 Task_t control_task("control_task", nullptr, update_control, TASK_PERIOD_HZ(500), TASK_PRIORITY_REALTIME);
 Task_t touch_task("touch_task", nullptr, update_touch, TASK_PERIOD_HZ(TOUCH_FRAME_RATE), TASK_PRIORITY_REALTIME);
 
@@ -41,7 +31,9 @@ void setup()
 {
     init_blynk();
 
-    platform.init_servos();
+    init_platform();
+
+    init_pattern_manager();
 
     init_scheduler();
 }
