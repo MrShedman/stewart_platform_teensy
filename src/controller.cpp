@@ -27,7 +27,7 @@ void init_control()
     m_ypid.init(p);
 }
 
-void update_control(uint32_t currentTimeUs)
+void update_control(const Time& currentTime)
 {
     const Touch& t = get_touch_list().back();
 

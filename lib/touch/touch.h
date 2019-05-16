@@ -6,7 +6,7 @@
 #include "time.h"
 #include "vec3.h"
 
-extern const uint8_t TOUCH_FRAME_RATE;
+extern const float TOUCH_FRAME_RATE;
 
 struct Touch
 {
@@ -18,7 +18,7 @@ struct Touch
 
 typedef CircularBuffer<Touch, 8> TouchList;
 
-void update_touch(uint32_t currentDeltaTimeUs);
+void update_touch(const Time& currentDeltaTimeUs);
 
 TouchList& get_touch_list();
 

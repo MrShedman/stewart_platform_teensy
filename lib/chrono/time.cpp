@@ -31,6 +31,11 @@ m_microseconds(microseconds)
 {
 }
 
+Time hertz(float amount)
+{
+    return Time(static_cast<int64_t>((1.0/amount) * 1000000.0));
+}
+
 Time seconds(float amount)
 {
     return Time(static_cast<int64_t>(amount * 1000000.0));

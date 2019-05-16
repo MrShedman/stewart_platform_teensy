@@ -7,11 +7,10 @@
 #include "connectivity.h"
 #include "scheduler.h"
 
-Task_t control_task("control_task", nullptr, update_control, TASK_PERIOD_HZ(500), TASK_PRIORITY_REALTIME);
-Task_t touch_task("touch_task", nullptr, update_touch, TASK_PERIOD_HZ(TOUCH_FRAME_RATE), TASK_PRIORITY_REALTIME);
-
-Task_t blynk_run_task("blynk_run_task", nullptr, update_blynk, TASK_PERIOD_HZ(200), TASK_PRIORITY_HIGH);
-Task_t blynk_sync_task("blynk_sync_task", nullptr, sync_params, TASK_PERIOD_HZ(20), TASK_PRIORITY_MEDIUM_HIGH);
+Task_t control_task(    "control_task",     nullptr, update_control,    hertz(500.0),               TASK_PRIORITY_REALTIME);
+Task_t touch_task(      "touch_task",       nullptr, update_touch,      hertz(TOUCH_FRAME_RATE),    TASK_PRIORITY_REALTIME);
+Task_t blynk_run_task(  "blynk_run_task",   nullptr, update_blynk,      hertz(200.0),               TASK_PRIORITY_HIGH);
+Task_t blynk_sync_task( "blynk_sync_task",  nullptr, sync_params,       hertz(20.0),                TASK_PRIORITY_MEDIUM_HIGH);
 
 void init_scheduler()
 {

@@ -18,6 +18,7 @@ public:
 
 private:
 
+    friend Time hertz(float);
     friend Time seconds(float);
     friend Time milliseconds(int64_t);
     friend Time microseconds(int64_t);
@@ -28,6 +29,8 @@ private:
 
     int64_t m_microseconds; ///< Time value stored as microseconds
 };
+
+Time hertz(float amount);
 
 Time seconds(float amount);
 

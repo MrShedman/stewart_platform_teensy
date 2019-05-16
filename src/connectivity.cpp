@@ -26,12 +26,12 @@ void init_blynk()
     Blynk.begin(auth, wifi, ssid, pass, ip, 8080);
 }
 
-void update_blynk(uint32_t currentTimeUs)
+void update_blynk(const Time& currentTime)
 {
     Blynk.run();
 }
 
-void sync_params(uint32_t currentTimeUs)
+void sync_params(const Time& currentTime)
 {
 
 }

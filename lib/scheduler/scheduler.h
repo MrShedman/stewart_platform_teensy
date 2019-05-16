@@ -2,24 +2,11 @@
 
 #include <Arduino.h>
 
-const uint32_t SCHEDULER_DELAY_LIMIT_US = 10u;
+#include "time.h"
+
+const Time SCHEDULER_DELAY_LIMIT = microseconds(10);
 const uint32_t MAX_TASK_COUNT = 20;
 const uint32_t MOVING_SUM_COUNT = 32;
-
-constexpr uint32_t TASK_PERIOD_HZ(const uint32_t hz)
-{
-    return 1000000 / hz;
-}
-
-constexpr uint32_t TASK_PERIOD_MS(const uint32_t ms) 
-{
-    return ms * 1000;
-}
-
-constexpr uint32_t TASK_PERIOD_US(const uint32_t us)
-{
-    return us;
-}
 
 enum TaskPriority_e 
 {
@@ -34,9 +21,9 @@ enum TaskPriority_e
 
 struct CheckFuncInfo_t
 {
-    uint32_t     maxExecutionTime;
-    uint32_t     totalExecutionTime;
-    uint32_t     averageExecutionTime;
+    Time     maxExecutionTime;
+    Time     totalExecutionTime;
+    Time     averageExecutionTime;
 };
 
 struct TaskInfo_t
@@ -45,19 +32,19 @@ struct TaskInfo_t
     uint8_t      id;
     bool         isEnabled;
     uint8_t      staticPriority;
-    uint32_t     desiredPeriod;
-    uint32_t     latestDeltaTime;
-    uint32_t     maxExecutionTime;
-    uint32_t     totalExecutionTime;
-    uint32_t     averageExecutionTime;
+    Time         desiredPeriod;
+    Time         latestDeltaTime;
+    Time         maxExecutionTime;
+    Time         totalExecutionTime;
+    Time         averageExecutionTime;
 };
 
 struct Task_t 
 {
-    typedef bool (checkFunctionPtr)(uint32_t currentTimeUs, uint32_t currentDeltaTimeUs);
-    typedef void (taskFunctionPtr)(uint32_t currentTimeUs);
+    typedef bool (checkFunctionPtr)(const Time& currentTimeUs, const Time& currentDeltaTimeUs);
+    typedef void (taskFunctionPtr)(const Time& currentTimeUs);
 
-    Task_t(const char* taskName, checkFunctionPtr* checkFunc_ptr, taskFunctionPtr* taskFunc_ptr, uint32_t desired_period, const uint8_t priority)
+    Task_t(const char* taskName, checkFunctionPtr* checkFunc_ptr, taskFunctionPtr* taskFunc_ptr, Time desired_period, const uint8_t priority)
     :
     id(255),
     taskName(taskName),
@@ -74,29 +61,29 @@ struct Task_t
     const char* taskName;
 	checkFunctionPtr* checkFunc;
 	taskFunctionPtr* taskFunc;
-    uint32_t desiredPeriod;      // target period of execution
+    Time desiredPeriod;      // target period of execution
     const uint8_t staticPriority;   // dynamicPriority grows in steps of this size, shouldn't be zero
 
     // Scheduling
     uint16_t dynamicPriority;       // measurement of how old task was last executed, used to avoid task starvation
     uint16_t taskAgeCycles;
-    uint32_t taskLatestDeltaTime;
-    uint32_t lastExecutedAt;        // last time of invocation
-    uint32_t lastSignaledAt;        // time of invocation event for event-driven tasks
+    Time taskLatestDeltaTime;
+    Time lastExecutedAt;        // last time of invocation
+    Time lastSignaledAt;        // time of invocation event for event-driven tasks
 
     // Statistics
-    uint32_t movingSumExecutionTime;  // moving sum over 32 samples
-    uint32_t maxExecutionTime;
-    uint32_t totalExecutionTime;    // total time consumed by task since boot
+    Time movingSumExecutionTime;  // moving sum over 32 samples
+    Time maxExecutionTime;
+    Time totalExecutionTime;    // total time consumed by task since boot
 };
 
 void printTaskInfo(Task_t* task);
 void getCheckFuncInfo(CheckFuncInfo_t *checkFuncInfo);
 void getTaskInfo(Task_t* task, TaskInfo_t *taskInfo);
-void rescheduleTask(Task_t* task, uint32_t newPeriodMicros);
+void rescheduleTask(Task_t* task, Time newPeriod);
 bool addTask(Task_t* task);
 void setTaskEnabled(Task_t* task, bool newEnabledState);
-uint32_t getTaskDeltaTime(Task_t* task);
+Time getTaskDeltaTime(Task_t* task);
 void schedulerSetCalulateTaskStatistics(bool calculateTaskStatistics);
 void schedulerResetTaskStatistics(Task_t* task);
 uint16_t getAverageSystemLoadPercent();

@@ -11,7 +11,7 @@ const uint8_t ul_pin = 3;
 
 const uint8_t sense_pin = 14;
 
-const uint8_t TOUCH_FRAME_RATE = 200;
+const float TOUCH_FRAME_RATE = 200;
 
 const uint8_t axis_list_size = 32;
 const uint8_t noise_list_size = 8;
@@ -86,7 +86,7 @@ void push_new_touch()
     touch_list.push(t);
 }
 
-void update_touch(uint32_t currentDeltaTimeUs)
+void update_touch(const Time& currentDeltaTime)
 {
     if (state)
     {

@@ -2,6 +2,8 @@
 
 #include <Arduino.h>
 
+#include "time.h"
+
 void init_control();
 
-void update_control(uint32_t currentTimeUs);
+void update_control(const Time& currentTime);
