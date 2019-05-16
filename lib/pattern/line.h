@@ -22,6 +22,8 @@ private:
 
     bool check_limits();
 
+    bool equal(float a, float b);
+
     Vec3 m_point;
     Vec3 m_start;
     Vec3 m_end;

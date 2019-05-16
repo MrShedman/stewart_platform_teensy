@@ -1,5 +1,7 @@
 #include "line.h"
 
+#include <math.h>
+
 Line::Line()
 :
 m_point(),
@@ -58,5 +60,13 @@ void Line::reset()
 
 bool Line::check_limits()
 {
-    return (distance_sq(m_start, m_point) + distance_sq(m_end, m_point) == m_total_distance_sq);
+    const float a = distance_sq(m_start, m_point);
+    const float b = distance_sq(m_end, m_point);
+    return equal(a + b, m_total_distance_sq);
+}
+
+bool Line::equal(float a, float b)
+{
+    const float EPSILON = 0.001;
+    return fabsf(a - b) < EPSILON;
 }
