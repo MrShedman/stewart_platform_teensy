@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <array>
 
 template <class T, uint32_t max_size_>
 class CircularBuffer
@@ -102,7 +103,7 @@ public:
 
 private:
 
-    T buf_[max_size_];
+    std::array<T, max_size_> buf_;
 	uint32_t head_ = 0;
 	uint32_t tail_ = 0;
 	bool full_ = 0;
