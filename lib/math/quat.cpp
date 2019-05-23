@@ -32,6 +32,22 @@ Quat::Quat(const Quat& axis, const Angle& angle)
     w = cos_half;
 }
 
+void Quat::setRPY(const Vec3& euler)
+{
+    const float c1 = cosf(euler.x * 0.5);
+    const float c2 = cosf(euler.y * 0.5);
+    const float c3 = cosf(euler.z * 0.5);
+    
+    const float s1 = sinf(euler.x * 0.5);
+    const float s2 = sinf(euler.y * 0.5);       
+    const float s3 = sinf(euler.z * 0.5);
+
+    w = c1 * c2 * c3 - s1 * s2 * s3;
+    x = s1 * c2 * c3 + c1 * s2 * s3;
+    y = c1 * s2 * c3 - s1 * c2 * s3;
+    z = c1 * c2 * s3 + s1 * s2 * c3;
+}
+
 Quat operator+(const Quat& lhs, const Quat& rhs)
 {
     return Quat(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w);

@@ -2,6 +2,7 @@
 
 class Quat;
 class Angle;
+class Vec3;
 
 class Quat
 {
@@ -12,6 +13,8 @@ public:
     Quat(const float x, const float y, const float z, const float w = 1.0);
 
     Quat(const Quat& axis, const Angle& angle);
+
+    void setRPY(const Vec3& euler);
 
     float x;
     float y;
