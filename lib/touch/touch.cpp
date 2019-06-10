@@ -50,7 +50,7 @@ float read_sense_pin()
 void update_axis(axis_t* axis)
 {
     axis->raw = read_sense_pin();
-    axis->time_list.push(microseconds(micros()));
+    axis->time_list.push(Time::now());
     axis->position_list.push(map(axis->raw, axis->min, axis->max, -1.0, 1.0));
     axis->noise_list.push(highPassFilterApply(&axis->filter, axis->position_list.back()));
     axis->delta = 0.0;
@@ -141,6 +141,6 @@ void init_touch()
     y_axis.max = 3000.0;
 
     const float f_cut_hz = 100.0;
-    highPassFilterInit(&x_axis.filter, f_cut_hz, 1.0 / TOUCH_FRAME_RATE);
-    highPassFilterInit(&y_axis.filter, f_cut_hz, 1.0 / TOUCH_FRAME_RATE);
+    highPassFilterInit(&x_axis.filter, f_cut_hz, hertz(TOUCH_FRAME_RATE));
+    highPassFilterInit(&y_axis.filter, f_cut_hz, hertz(TOUCH_FRAME_RATE));
 }
