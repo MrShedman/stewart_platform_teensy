@@ -2,6 +2,7 @@
 
 #include "servo.h"
 #include "angle.h"
+#include "circular_buffer.h"
 
 Vec3 translation, home_pose;
 Mat33 rotation;
@@ -78,6 +79,18 @@ void calcAlphaZero()
     }
 }
 
+bool check_for_naan()
+{
+    for (uint8_t i = 0; i < 6; i++)
+    {
+        if (isnan(servo_pulse_widths[i]))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 void calcPulseWidths()
 {
     for (uint8_t i = 0; i < 6; i++)
@@ -91,7 +104,13 @@ void calcPulseWidths()
         {
             servo_pulse_widths[i] = servo_zeros[i] + width;
         }
-        
+    }
+}
+
+void write_servos()
+{
+    for (uint8_t i = 0; i < 6; i++)
+    {
         servos[i].write(servo_pulse_widths[i]);
     }
 }
@@ -115,11 +134,25 @@ void init_platform()
     }
 }
 
-void transform_platform(const Vec3& t, const Mat33& r)
+bool transform_platform(const Vec3& t, const Mat33& r)
 {
-    rotation = r;
     translation = t;
+    rotation = r;
     calcQ();
     calcAlpha();
     calcPulseWidths();
+    if (check_for_naan())
+    {
+        return false;
+    }
+    else
+    {
+        write_servos();
+        return true;
+    }
+}
+
+void home_platform()
+{
+    transform_platform(Vec3(), Mat33());
 }

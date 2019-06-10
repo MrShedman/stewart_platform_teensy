@@ -7,4 +7,6 @@
 
 void init_platform();
 
-void transform_platform(const Vec3& t, const Mat33& r);
+bool transform_platform(const Vec3& t, const Mat33& r);
+
+void home_platform();
