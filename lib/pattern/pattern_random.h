@@ -10,7 +10,7 @@ public:
 
     PatternRandom(const AABB& aabb, const float speed)
     :
-    PatternBase(speed),
+    PatternBase("Random", speed),
     m_aabb(aabb),
     m_line(gen_line())
     {

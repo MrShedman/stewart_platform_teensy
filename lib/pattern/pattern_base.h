@@ -1,29 +1,44 @@
 #pragma once
 
-#include "time.h"
+#include "clock.h"
 #include "vec3.h"
 
 class PatternBase
 {
 public:
 
-    PatternBase(const float speed)
+    PatternBase(const char* name, const float speed)
     :
+    m_name(name),
     m_speed(speed)
     {}
 
     virtual const Vec3& update() = 0;
 
+    const char* get_name() const
+    {
+        return m_name;
+    }
+
+    void set_speed(const float speed)
+    {
+        m_speed = speed;
+    }
+
+    const float get_speed() const
+    {
+        return m_speed;
+    }
+
 protected:
 
     const float get_delta()
     {
-        float dt = (Time::now() - m_last_update).asSeconds();
-        m_last_update = Time::now();
-        return m_speed * dt;
+        return m_speed * m_clock.restart().asSeconds();
     }
 
-    const float m_speed;
+    const char* m_name;
+    float m_speed;
     Vec3 m_point;
-    Time m_last_update;
+    Clock m_clock;
 };

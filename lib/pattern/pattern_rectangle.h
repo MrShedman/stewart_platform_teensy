@@ -15,6 +15,6 @@ public:
             Vec3(bounds.min().x, bounds.max().y, 0.0), Vec3(bounds.max().x, bounds.max().y, 0.0),
             Vec3(bounds.max().x, bounds.min().y, 0.0), Vec3(bounds.min().x, bounds.min().y, 0.0),
             Vec3(bounds.min().x, bounds.max().y, 0.0)
-            }, speed)
+            }, "Rectangle", speed)
     {}
 };

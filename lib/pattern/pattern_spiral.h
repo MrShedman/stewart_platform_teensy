@@ -9,7 +9,7 @@ public:
 
     PatternSpiral(const Vec3& origin, const float min_radius, const float max_radius, const float speed)
     :
-    PatternBase(speed),
+    PatternBase("Spiral", speed),
     m_angle(degrees(90.0)),
     m_radius(m_min_radius),
     m_direction(1.0),

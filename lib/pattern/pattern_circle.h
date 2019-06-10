@@ -9,7 +9,7 @@ public:
 
     PatternCircle(const Vec3& origin, const float radius, const float speed)
     :
-    PatternBase(speed),
+    PatternBase("Circle", speed),
     m_angle(degrees(90.0)),
     m_origin(origin),
     m_radius(radius)

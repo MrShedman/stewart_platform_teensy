@@ -10,9 +10,9 @@ class PatternPolyLine : public PatternBase
 {
 public:
 
-    PatternPolyLine(const std::array<Vec3, SIZE>& point_array, const float speed)
+    PatternPolyLine(const std::array<Vec3, SIZE>& point_array, const char* name, const float speed)
     :
-    PatternBase(speed),
+    PatternBase(name, speed),
     m_line_index(0)
     {
         for (std::size_t i = 0; i < SIZE - 1; ++i)

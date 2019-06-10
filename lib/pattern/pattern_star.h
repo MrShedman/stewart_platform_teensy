@@ -18,6 +18,6 @@ public:
             polar(degrees(72),  radius) + origin,
             polar(degrees(216), radius) + origin,
             polar(degrees(0),   radius) + origin
-            }, speed)
+            }, "Star", speed)
     {}
 };
