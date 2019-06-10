@@ -1,21 +1,11 @@
 #include "pid.h"
 
-namespace
-{
-    float constrain(float x, float min, float max)
-    {
-        if (x < min) return min;
-        if (x > max) return max;
-        return x;
-    }
-}
-
 void PID::init(const pidProfile_t& profile)
 {
     prof = profile;
     use_dterm_filter = false;
 
-    if (prof.dterm_lpf_hz > 0.0 && prof.lpf_dt > 0.0)
+    if (prof.dterm_lpf_hz > 0.0 && prof.lpf_dt > seconds(0.0))
     {
         lowPassFilterInit(&dterm_filter, prof.dterm_lpf_hz, prof.lpf_dt);
         use_dterm_filter = true;

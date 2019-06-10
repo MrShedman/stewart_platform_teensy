@@ -12,7 +12,7 @@ struct pidProfile_t
 	float max_out;
 
 	float dterm_lpf_hz;
-	float lpf_dt;
+	Time lpf_dt;
 };
 
 class PID
