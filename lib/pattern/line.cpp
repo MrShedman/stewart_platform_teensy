@@ -38,11 +38,14 @@ m_complete(line.m_complete)
 
 const Vec3& Line::update(const float inc)
 {
-    m_point += m_direction * inc;
-    if (!check_limits())
+    if (m_complete)
     {
-        m_point = m_end;
-        m_complete = true;
+        m_point += m_direction * inc;
+        if (!check_limits())
+        {
+            m_point = m_end;
+            m_complete = true;
+        }
     }
     return m_point;
 }
