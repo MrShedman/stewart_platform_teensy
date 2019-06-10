@@ -1,8 +1,6 @@
 #pragma once
 
-#include <Arduino.h>
-
-#include "time.h"
+#include "clock.h"
 
 class Rate
 {
@@ -15,5 +13,5 @@ public:
 private:
 
     const Time m_loop_time;
-    Time m_loop_start_time;
+    Clock m_loop_clock;
 };
