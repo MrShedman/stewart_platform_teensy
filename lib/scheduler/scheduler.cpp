@@ -2,9 +2,11 @@
 
 #include "logger.h"
 
+#include "task.h"
+
 namespace
 {
-    Task_t *currentTask = nullptr;
+    Task *currentTask = nullptr;
 
     uint32_t totalWaitingTasks;
     uint32_t totalWaitingTasksSamples;
@@ -19,10 +21,10 @@ namespace
     Time checkFuncTotalExecutionTime;
     Time checkFuncMovingSumExecutionTime;
 
-    Task_t* Tasks[MAX_TASK_COUNT];
+    Task* Tasks[MAX_TASK_COUNT];
     uint8_t task_count = 0;
 
-    Task_t* taskQueueArray[MAX_TASK_COUNT + 1]; // extra item for nullptr pointer at end of queue
+    Task* taskQueueArray[MAX_TASK_COUNT + 1]; // extra item for nullptr pointer at end of queue
 }
 
 void taskSystem(const Time& currentTime)
@@ -41,7 +43,7 @@ uint16_t getAverageSystemLoadPercent()
     return averageSystemLoadPercent;
 }
 
-Task_t task_sys("SYSTEM", nullptr, taskSystem, hertz(10.0), TASK_PRIORITY_MEDIUM_HIGH);
+Task task_sys("SYSTEM", nullptr, taskSystem, hertz(10.0), TASK_PRIORITY_MEDIUM_HIGH);
 
 void queueClear()
 {
@@ -50,7 +52,7 @@ void queueClear()
     taskQueueSize = 0;
 }
 
-bool queueContains(Task_t *task)
+bool queueContains(Task *task)
 {
     for (uint32_t ii = 0; ii < taskQueueSize; ++ii)
 	{
@@ -62,7 +64,7 @@ bool queueContains(Task_t *task)
     return false;
 }
 
-bool queueAdd(Task_t *task)
+bool queueAdd(Task *task)
 {
     if ((taskQueueSize >= task_count) || queueContains(task))
 	{
@@ -81,7 +83,7 @@ bool queueAdd(Task_t *task)
     return false;
 }
 
-bool queueRemove(Task_t *task)
+bool queueRemove(Task *task)
 {
     for (uint32_t ii = 0; ii < taskQueueSize; ++ii) 
 	{
@@ -95,31 +97,15 @@ bool queueRemove(Task_t *task)
     return false;
 }
 
-Task_t *queueFirst()
+Task *queueFirst()
 {
     taskQueuePos = 0;
     return taskQueueArray[0]; // guaranteed to be nullptr if queue is empty
 }
 
-Task_t *queueNext()
+Task *queueNext()
 {
     return taskQueueArray[++taskQueuePos]; // guaranteed to be nullptr at end of queue
-}
-
-void printTaskInfo(Task_t* task)
-{
-    TaskInfo_t info;
-    getTaskInfo(task, &info);
-
-    LOG_INFO("%s\n", info.taskName);
-    LOG_INFO("ID: %d\n", info.id);
-    LOG_INFO("Enabled: %s\n", info.isEnabled ? "true" : "false");
-    LOG_INFO("Static priority: %d\n", info.staticPriority);
-    LOG_INFO("Desired period: %dus\n", info.desiredPeriod.asMicroseconds());
-    LOG_INFO("Latest Delta Time: %dus\n", info.latestDeltaTime.asMicroseconds());
-    LOG_INFO("Max Execution Time: %dus\n", info.maxExecutionTime.asMicroseconds());
-    LOG_INFO("Total Execution Time: %dus\n", info.totalExecutionTime.asMicroseconds());
-    LOG_INFO("Avg Execution Time: %dus\n", info.averageExecutionTime.asMicroseconds());
 }
 
 void getCheckFuncInfo(CheckFuncInfo_t *checkFuncInfo)
@@ -129,29 +115,16 @@ void getCheckFuncInfo(CheckFuncInfo_t *checkFuncInfo)
     checkFuncInfo->averageExecutionTime = checkFuncMovingSumExecutionTime / (int64_t)MOVING_SUM_COUNT;
 }
 
-void getTaskInfo(Task_t* task, TaskInfo_t * taskInfo)
-{
-    taskInfo->taskName = Tasks[task->id]->taskName;
-    taskInfo->id = Tasks[task->id]->id;
-    taskInfo->isEnabled = queueContains(Tasks[task->id]);
-    taskInfo->desiredPeriod = Tasks[task->id]->desiredPeriod;
-    taskInfo->staticPriority = Tasks[task->id]->staticPriority;
-    taskInfo->maxExecutionTime = Tasks[task->id]->maxExecutionTime;
-    taskInfo->totalExecutionTime = Tasks[task->id]->totalExecutionTime;
-    taskInfo->averageExecutionTime = Tasks[task->id]->movingSumExecutionTime / (int64_t)MOVING_SUM_COUNT;
-    taskInfo->latestDeltaTime = Tasks[task->id]->taskLatestDeltaTime;
-}
-
-void rescheduleTask(Task_t* task, Time newPeriod)
+void rescheduleTask(Task* task, Time newPeriod)
 {
     if (task->id < task_count) 
 	{
-		Task_t *t = Tasks[task->id];
+		Task *t = Tasks[task->id];
         t->desiredPeriod = max(SCHEDULER_DELAY_LIMIT, newPeriod);  // Limit delay to 100us (10 kHz) to prevent scheduler clogging
     }
 }
 
-bool addTask(Task_t* task)
+bool addTask(Task* task)
 {
     if (task)
     {
@@ -176,11 +149,11 @@ bool addTask(Task_t* task)
     return false;
 }
 
-void setTaskEnabled(Task_t* task, bool enabled)
+void setTaskEnabled(Task* task, bool enabled)
 {
     if (task->id < task_count) 
 	{
-        Task_t *t = Tasks[task->id];
+        Task *t = Tasks[task->id];
         if (enabled && t->taskFunc)
 		{
             queueAdd(t);
@@ -192,24 +165,12 @@ void setTaskEnabled(Task_t* task, bool enabled)
     }
 }
 
-Time getTaskDeltaTime(Task_t* task)
-{
-	if (task->id < task_count)
-	{
-        return Tasks[task->id]->taskLatestDeltaTime;
-    }
-	else 
-	{
-        return Time();
-    }
-}
-
 void schedulerSetCalulateTaskStatistics(bool calculateTaskStatisticsToUse)
 {
     calculateTaskStatistics = calculateTaskStatisticsToUse;
 }
 
-void schedulerResetTaskStatistics(Task_t* task)
+void schedulerResetTaskStatistics(Task* task)
 {
     if (task->id < task_count) 
 	{
@@ -236,7 +197,7 @@ void scheduler()
 
     // Check for realtime tasks
     bool outsideRealtimeGuardInterval = true;
-    for (const Task_t *task = queueFirst(); task != nullptr && task->staticPriority >= TASK_PRIORITY_REALTIME; task = queueNext()) 
+    for (const Task *task = queueFirst(); task != nullptr && task->staticPriority >= TASK_PRIORITY_REALTIME; task = queueNext()) 
 	{
         const Time nextExecuteAt = task->lastExecutedAt + task->desiredPeriod;
         if (currentTime - nextExecuteAt >= seconds(0.0)) 
@@ -247,12 +208,12 @@ void scheduler()
     }
 
     // The task to be invoked
-	Task_t *selectedTask = nullptr;
+	Task *selectedTask = nullptr;
     uint16_t selectedTaskDynamicPriority = 0;
 
     // Update task dynamic priorities
     uint16_t waitingTasks = 0;
-    for (Task_t *task = queueFirst(); task != nullptr; task = queueNext()) 
+    for (Task *task = queueFirst(); task != nullptr; task = queueNext()) 
 	{
         // Task has checkFunc - event driven
         if (task->checkFunc)
