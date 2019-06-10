@@ -1,12 +1,14 @@
 #pragma once
 
-#include "Arduino.h"
+#include <Arduino.h>
 
 class Time
 {
 public:
 
     Time();
+
+    float asHertz() const;
 
     float asSeconds() const;
 
@@ -19,6 +21,8 @@ public:
 private:
 
     friend Time hertz(float);
+    friend Time hours(float);
+    friend Time minutes(float);
     friend Time seconds(float);
     friend Time milliseconds(int64_t);
     friend Time microseconds(int64_t);
@@ -31,6 +35,10 @@ private:
 };
 
 Time hertz(float amount);
+
+Time hours(float);
+
+Time minutes(float);
 
 Time seconds(float amount);
 

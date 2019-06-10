@@ -11,6 +11,11 @@ m_microseconds(0)
 {
 }
 
+float Time::asHertz() const
+{
+    return 1.0 / asSeconds();
+}
+
 float Time::asSeconds() const
 {
     return m_microseconds / 1000000.0;
@@ -34,6 +39,16 @@ m_microseconds(microseconds)
 Time hertz(float amount)
 {
     return Time(static_cast<int64_t>((1.0/amount) * 1000000.0));
+}
+
+Time hours(float amount)
+{
+    return minutes(amount * 60.0);
+}
+
+Time minutes(float amount)
+{
+    return seconds(amount * 60.0);
 }
 
 Time seconds(float amount)
