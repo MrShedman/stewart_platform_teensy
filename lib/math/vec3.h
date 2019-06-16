@@ -63,3 +63,5 @@ Vec3 max(const Vec3& lhs, const Vec3& rhs);
 Vec3 normalise(const Vec3& v);
 
 Vec3 rotate(const Vec3& v, const Quat& rot);
+
+Angle angle_between(const Vec3& lhs, const Vec3& rhs);

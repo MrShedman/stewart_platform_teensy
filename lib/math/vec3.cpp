@@ -186,3 +186,11 @@ Vec3 rotate(const Vec3& v, const Quat& rot)
 	const Vec3 t = cross(u, v) * 2.0;
 	return v + t * s + cross(u, t);
 }
+
+Angle angle_between(const Vec3& lhs, const Vec3& rhs)
+{
+    const float d = dot(lhs, rhs);
+    const float mag_lhs = length(lhs);
+    const float mag_rhs = length(rhs);
+    return radians(acosf(d / (mag_lhs * mag_rhs)));
+}
