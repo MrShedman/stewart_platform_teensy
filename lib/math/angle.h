@@ -7,6 +7,8 @@ class Angle
 {
 public:
 
+    Angle();
+
     float asDegrees() const;
     float asRadians() const;
 

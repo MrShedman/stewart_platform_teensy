@@ -2,9 +2,18 @@
 
 #include <math.h>
 
-Angle::Angle(float rad)
+Angle::Angle()
+:
+m_radians(0.0)
 {
-    m_radians = rad;
+
+}
+
+Angle::Angle(float rad)
+:
+m_radians(rad)
+{
+
 }
 
 float Angle::asDegrees() const
