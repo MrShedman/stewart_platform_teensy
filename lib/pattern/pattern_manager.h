@@ -10,8 +10,9 @@ enum class PatternList
     Rectangle,
     Star,
     Cross,
-    Spiral,
     Random,
+    Lissajous,
+    Rose,
     None,
     Count
 };

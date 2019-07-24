@@ -38,9 +38,11 @@ void setup()
 
     ///init_blynk();
 
-    //init_platform();
+    //init_platform();#
 
     init_pattern_manager();
+
+    init_control();
 
     init_scheduler();
 

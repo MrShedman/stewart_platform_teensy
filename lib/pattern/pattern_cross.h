@@ -5,7 +5,7 @@
 #include "vec3.h"
 #include "angle.h"
 
-class PatternCross : public PatternPolyLine<9>
+class PatternCross : public PatternPolyLine<8>
 {
 public:
 
@@ -19,8 +19,7 @@ public:
             polar(degrees(0),   0.0)    + origin,
             polar(degrees(180), radius) + origin,
             polar(degrees(0),   0.0)    + origin,
-            polar(degrees(270), radius) + origin,
-            polar(degrees(0),   0.0)    + origin
+            polar(degrees(270), radius) + origin
             }, "Cross", speed)
     {}
 };

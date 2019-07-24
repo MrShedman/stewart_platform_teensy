@@ -5,7 +5,7 @@
 #include "vec3.h"
 #include "AABB.h"
 
-class PatternRectangle : public PatternPolyLine<5>
+class PatternRectangle : public PatternPolyLine<4>
 {
 public:
 
@@ -13,8 +13,7 @@ public:
     :
     PatternPolyLine({
             Vec3(bounds.min().x, bounds.max().y, 0.0), Vec3(bounds.max().x, bounds.max().y, 0.0),
-            Vec3(bounds.max().x, bounds.min().y, 0.0), Vec3(bounds.min().x, bounds.min().y, 0.0),
-            Vec3(bounds.min().x, bounds.max().y, 0.0)
+            Vec3(bounds.max().x, bounds.min().y, 0.0), Vec3(bounds.min().x, bounds.min().y, 0.0)
             }, "Rectangle", speed)
     {}
 };

@@ -19,6 +19,7 @@ public:
         {
             m_lines[i] = Line(point_array[i], point_array[i + 1]);
         }
+        m_lines[SIZE - 1] = Line(point_array[SIZE - 1], point_array[0]);
     }
 
     const Vec3& update() override
