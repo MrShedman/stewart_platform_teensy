@@ -65,7 +65,7 @@ bool Line::check_limits()
 {
     const float a = distance_sq(m_start, m_point);
     const float b = distance_sq(m_end, m_point);
-    return equal(a + b, m_total_distance_sq) || fabs(a) > m_total_distance_sq || fabs(b) > m_total_distance_sq;
+    return equal(a + b, m_total_distance_sq) || fabsf(a) > m_total_distance_sq || fabsf(b) > m_total_distance_sq;
 }
 
 bool Line::equal(float a, float b)
