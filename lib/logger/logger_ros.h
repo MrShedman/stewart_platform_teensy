@@ -11,21 +11,18 @@ class Logger_ : public LoggerBase
 {
 public:
 
-    explicit Logger_(NodeHandle& nh)
+    explicit Logger_(NodeHandle* nh_ptr)
     :
-    nh_(nh)
+    nh_ptr(nh_ptr)
     {
         memset(log_buffer, 0, BUFFER_SIZE);
         setLogger(this);
     }
 
-    ~Logger_()
-    {
-        setLogger(nullptr);
-    }
-
     void print(Level level, const char* file, int line, const char* fmt, ...) override
     {
+        if (nh_ptr == nullptr) return;
+
         memset(log_buffer, 0, BUFFER_SIZE);
         va_list args;
         va_start(args, fmt);
@@ -36,20 +33,24 @@ public:
 
         if (result > 0 && result < (int32_t)BUFFER_SIZE)
         {
-            // success
-            switch (level)
-            {
-                case Level::Debug: return nh_.logdebug(log_buffer);
-                case Level::Info:  return nh_.loginfo(log_buffer);
-                case Level::Warn:  return nh_.logwarn(log_buffer);
-                case Level::Error: return nh_.logerror(log_buffer);
-                case Level::Fatal: return nh_.logfatal(log_buffer);
-                default:    return nh_.logerror(log_error_msg);
-            }
+            print(level, log_buffer, file, line);
         }
         else
         {
-            return nh_.logerror(log_error_msg);
+            return nh_ptr->logerror(log_error_msg);
+        }
+    }
+
+    void print(Level level, const char* str, const char* file, int line) override
+    {
+        switch (level)
+        {
+            case Debug: return nh_ptr->logdebug(str);
+            case Info:  return nh_ptr->loginfo(str);
+            case Warn:  return nh_ptr->logwarn(str);
+            case Error: return nh_ptr->logerror(str);
+            case Fatal: return nh_ptr->logfatal(str);
+            default:    return nh_ptr->logerror(log_error_msg);
         }
     }
 
@@ -59,7 +60,7 @@ private:
 
     const char* log_error_msg = "Error writing log!";
 
-    NodeHandle nh_;
+    NodeHandle* nh_ptr;
 };
 
 typedef Logger_<> Logger;
